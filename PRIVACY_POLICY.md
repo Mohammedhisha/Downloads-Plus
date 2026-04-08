@@ -25,9 +25,9 @@ UI preferences (such as display settings) locally on your device.
 This data never leaves your browser.
 
 ## 3c. Third-Party Libraries
-The extension loads the Framer Motion animation library from an 
-external CDN for UI animations only. This library does not collect 
-or transmit any user data.
+All third-party libraries used by this extension, including 
+animation libraries, are bundled locally within the extension 
+package. No external scripts or resources are loaded at runtime.
 
 ## 4. Changes to This Policy
 We may update this Privacy Policy from time to time. If we make significant changes, we will update the "Last Updated" date at the top of this policy.
