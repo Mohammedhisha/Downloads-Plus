@@ -1,0 +1,27 @@
+{
+  "manifest_version": 3,
+  "name": "Downloads Plus",
+  "version": "1.0.0",
+  "description": "Modern Chrome Downloads replacement with real-time tracking, animated glows, and smart file tagging.",
+  "permissions": [
+    "downloads",
+    "tabs",
+    "storage"
+  ],
+  "icons": {
+    "16": "icon-16.png",
+    "48": "icon-48.png",
+    "128": "icon-128.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "Downloads Plus",
+    "default_icon": {
+      "16": "icon-16.png",
+      "48": "icon-48.png",
+      "128": "icon-128.png"
+    }
+  }
+}
