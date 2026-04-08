@@ -19,6 +19,16 @@ Because we need to replace the default Chrome downloads page, we also access act
 - All processing is done locally within your browser. 
 - We do not use analytics or third-party trackers.
 
+## 3b. Local Storage
+The extension uses Chrome's `storage` API exclusively to save your 
+UI preferences (such as display settings) locally on your device. 
+This data never leaves your browser.
+
+## 3c. Third-Party Libraries
+The extension loads the Framer Motion animation library from an 
+external CDN for UI animations only. This library does not collect 
+or transmit any user data.
+
 ## 4. Changes to This Policy
 We may update this Privacy Policy from time to time. If we make significant changes, we will update the "Last Updated" date at the top of this policy.
 
