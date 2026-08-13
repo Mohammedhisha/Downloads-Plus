@@ -5,40 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Privacy Policy – Downloads Plus</title>
 <style>
-  body { font-family: system-ui, sans-serif; max-width: 800px; margin: 60px auto; padding: 0 24px; color: #e0e0e0; background: #0a0a0f; line-height: 1.7; }
-  h1 { color: #4f9eff; } h2 { color: #ffffff; margin-top: 40px; }
-  p, li { color: #b0b0b0; } code { color: #4f9eff; }
-  .updated { color: #666; font-size: 14px; }
+  body{max-width:46rem;margin:0 auto;padding:2.5rem 1.25rem;
+       font:16px/1.65 -apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+       color:#202124;background:#fff}
+  h1{font-size:1.75rem;margin-bottom:.25rem}
+  h2{font-size:1.1rem;margin-top:2.25rem}
+  .updated{color:#5f6368;font-size:.9rem;margin-top:0}
+  code{background:#f1f3f4;padding:.1rem .35rem;border-radius:3px;font-size:.9em}
+  li{margin:.4rem 0}
+  strong{font-weight:600}
+  @media (prefers-color-scheme:dark){
+    body{background:#202124;color:#e8eaed}
+    code{background:#35363a}
+    .updated{color:#9aa0a6}
+  }
 </style>
 </head>
 <body>
+
 <h1>Privacy Policy for Downloads Plus</h1>
-<p class="updated">Last Updated: April 8, 2026</p>
+<p class="updated">Last Updated: August 13, 2026</p>
 
 <h2>1. Introduction</h2>
-<p>Downloads Plus is committed to protecting your privacy. This policy explains how we handle your data when you use our Chrome Extension.</p>
+<p>Downloads Plus is committed to protecting your privacy. This policy explains how the extension handles your data.</p>
 
-<h2>2. Data We Access</h2>
-<p>Downloads Plus requests the following permissions:</p>
+<h2>2. Permissions We Request</h2>
 <ul>
-  <li><strong>downloads:</strong> To read your download history including file names, URLs, sizes, and states, and to allow pausing, resuming, cancelling, or removing downloads.</li>
-  <li><strong>tabs:</strong> To detect when you visit chrome://downloads and redirect you to the enhanced dashboard.</li>
-  <li><strong>storage:</strong> To save your UI preferences locally on your device.</li>
+  <li><strong>downloads</strong> — to read your download history, including file names, URLs, sizes and states, and to pause, resume, cancel, retry or remove downloads.</li>
+  <li><strong>downloads.ui</strong> — to hide Chrome's own download button and notification bubble. Chrome's bubble renders on top of the extension's toolbar popup and makes it unreadable, so the extension suppresses it and shows equivalent progress on its own icon instead. <strong>You can re-enable Chrome's download UI at any time from the extension's settings</strong>, and disabling or removing the extension restores it automatically.</li>
+  <li><strong>tabs</strong> — to detect navigation to <code>chrome://downloads</code> and redirect it to the extension's own downloads page, and to focus that page if it is already open.</li>
+  <li><strong>storage</strong> — to save your preferences (theme, sort order, keyboard shortcuts, auto-clear interval) locally on your device.</li>
+  <li><strong>alarms</strong> — to schedule the optional auto-clear timer that removes completed downloads after an interval you choose. Failed downloads are never auto-cleared.</li>
 </ul>
 
 <h2>3. Data Storage and Transmission</h2>
-<p><strong>All data remains on your device.</strong> Downloads Plus does not collect, transmit, or store any personal information, download history, or browsing data on external servers. All processing is done locally within your browser. We do not use analytics or third-party trackers.</p>
+<p><strong>All data remains on your device.</strong> Downloads Plus does not collect, transmit or store any personal information, download history or browsing data on external servers. All processing happens locally in your browser. There are no analytics and no third-party trackers.</p>
 
 <h2>4. Local Storage</h2>
-<p>The extension uses Chrome's <code>storage</code> API exclusively to save your UI preferences locally. This data never leaves your browser.</p>
+<p>The extension uses Chrome's <code>storage</code> API exclusively to save your preferences locally. This data never leaves your browser. Uninstalling the extension removes it.</p>
 
-<h2>5. Third-Party Libraries</h2>
+<h2>5. Files on Your Computer</h2>
+<p>Downloads Plus never reads the contents of downloaded files. It works only with the metadata Chrome provides — file name, size, source URL and status. "Show in folder" asks your operating system to reveal a file; the extension does not open or read it.</p>
+
+<h2>6. Third-Party Libraries</h2>
 <p>All third-party libraries are bundled locally within the extension package. No external scripts or resources are loaded at runtime.</p>
 
-<h2>6. Changes to This Policy</h2>
-<p>We may update this Privacy Policy from time to time. Changes will be reflected in the "Last Updated" date above.</p>
+<h2>7. Changes to This Policy</h2>
+<p>This policy may be updated from time to time. Changes will be reflected in the "Last Updated" date above.</p>
 
-<h2>7. Contact Us</h2>
-<p>For questions, please contact us through the Chrome Web Store support page for the extension.</p>
+<h2>8. Contact</h2>
+<p>For questions, please use the Chrome Web Store support page for the extension.</p>
+
 </body>
 </html>
