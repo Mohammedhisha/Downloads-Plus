@@ -1,13 +1,854 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/direct-download.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Downloads Plus</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Downloads Plus — What's New & How It Works</title>
+  <meta name="description" content="Downloads Plus replaces Chrome's downloads with a searchable popup and a full page. See what's new in 1.1.0 and learn every feature.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700;9..40,800&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #202124;
+      --bg-panel:    #292A2D;
+      --bg-item:     #35363A;
+      --text:        #E8EAED;
+      --text-2:      #9AA0A6;
+      --text-3:      #5F6368;
+      --border:      #3c4043;
+      --accent:      #8AB4F8;
+      --accent-dim:  rgba(138,180,248,.15);
+      --green:       #81C995;
+      --green-dim:   rgba(129,201,149,.15);
+      --red:         #F28B82;
+      --red-dim:     rgba(242,139,130,.15);
+      --orange:      #FDD663;
+      --orange-dim:  rgba(253,214,99,.15);
+      --radius:      12px;
+      --radius-lg:   16px;
+      --max-w:       880px;
+      --font:        'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    img { max-width: 100%; height: auto; display: block; }
+
+    .icon {
+      width: 20px; height: 20px;
+      stroke: currentColor; fill: none;
+      stroke-width: 2; stroke-linecap: round; stroke-linejoin: round;
+      flex-shrink: 0;
+    }
+    .icon-sm { width: 16px; height: 16px; }
+
+    .wrap { max-width: var(--max-w); margin: 0 auto; padding: 0 24px; }
+
+    /* ─── Hero ─────────────────────────────────────────────── */
+    .hero {
+      text-align: center;
+      padding: 72px 24px 48px;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: -40% 0 0;
+      background: radial-gradient(ellipse 55% 45% at 50% 0%, rgba(138,180,248,.1) 0%, transparent 70%);
+      pointer-events: none;
+    }
+    .hero__logo {
+      width: 64px; height: 64px;
+      margin: 0 auto 20px;
+      position: relative;
+    }
+    .hero__logo img { width: 100%; height: 100%; border-radius: 14px; }
+    .hero__version {
+      font-size: 13px; font-weight: 500;
+      color: var(--text-2);
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-size: clamp(28px,5vw,46px);
+      font-weight: 800; letter-spacing: -.5px;
+      line-height: 1.1; margin-bottom: 12px;
+    }
+    .hero p {
+      font-size: 16px; color: var(--text-2);
+      max-width: 520px; margin: 0 auto 28px;
+    }
+
+    .nav {
+      display: flex; gap: 2px; justify-content: center;
+      padding: 3px; border-radius: 100px;
+      background: var(--bg-panel); border: 1px solid var(--border);
+      width: fit-content; margin: 0 auto 48px;
+      flex-wrap: wrap;
+    }
+    .nav a {
+      padding: 7px 16px; border-radius: 100px;
+      font-size: 12px; font-weight: 600;
+      color: var(--text-2); transition: .2s; white-space: nowrap;
+    }
+    .nav a:hover { color: var(--text); text-decoration: none; background: var(--bg-item); }
+
+    /* ─── Section ──────────────────────────────────────────── */
+    section { padding: 36px 0 56px; }
+    section + section { border-top: 1px solid var(--border); }
+
+    .section-label {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; font-weight: 700;
+      letter-spacing: 1.2px; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 6px;
+    }
+    .section-title {
+      font-size: clamp(22px,3.5vw,30px);
+      font-weight: 700; letter-spacing: -.3px; margin-bottom: 8px;
+    }
+    .section-desc {
+      font-size: 14px; color: var(--text-2);
+      max-width: 560px; margin-bottom: 32px;
+    }
+
+    /* ─── Changelog ────────────────────────────────────────── */
+    .changelog { list-style: none; }
+    .changelog li {
+      display: flex; align-items: flex-start; gap: 14px;
+      padding: 14px 0; border-bottom: 1px solid var(--border);
+      font-size: 14px; color: var(--text-2);
+    }
+    .changelog li:last-child { border-bottom: none; }
+    .changelog .cl-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; margin-top: 1px;
+    }
+    .changelog li strong { color: var(--text); }
+
+    /* ─── Feature cards ────────────────────────────────────── */
+    .features { display: grid; gap: 16px; }
+    @media (min-width: 640px) { .features { grid-template-columns: 1fr 1fr; } }
+
+    .fcard {
+      background: var(--bg-panel); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 24px;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .fcard:hover {
+      border-color: rgba(138,180,248,.25);
+      box-shadow: 0 4px 24px rgba(0,0,0,.25);
+    }
+    .fcard__icon {
+      width: 36px; height: 36px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 14px;
+    }
+    .fcard h3 { font-size: 15px; font-weight: 700; margin-bottom: 5px; }
+    .fcard p  { font-size: 13px; color: var(--text-2); line-height: 1.6; }
+    .fcard--wide { grid-column: 1 / -1; }
+
+    .ic-blue   { background: var(--accent-dim); color: var(--accent); }
+    .ic-green  { background: var(--green-dim);  color: var(--green); }
+    .ic-red    { background: var(--red-dim);    color: var(--red); }
+    .ic-orange { background: var(--orange-dim); color: var(--orange); }
+
+    .tags-demo { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+    .tag {
+      padding: 3px 10px; border-radius: 5px;
+      font-size: 11px; font-weight: 600;
+      background: var(--bg-item); border: 1px solid var(--border);
+      color: var(--text-2);
+    }
+
+    /* ─── Glow strip ───────────────────────────────────────── */
+    .glow-strip { display: grid; gap: 12px; margin-top: 20px; }
+    @media (min-width: 640px) { .glow-strip { grid-template-columns: repeat(3,1fr); } }
+
+    .glow-card {
+      border-radius: var(--radius); padding: 20px;
+      text-align: center; position: relative; overflow: hidden;
+      border: 1px solid var(--border); background: var(--bg-panel);
+    }
+    .glow-card::after {
+      content: ''; position: absolute;
+      inset: 40% 10% -10%; border-radius: 50%;
+      filter: blur(24px); opacity: .25; pointer-events: none;
+    }
+    .glow-card--blue::after  { background: var(--accent); }
+    .glow-card--green::after { background: var(--green); }
+    .glow-card--red::after   { background: var(--red); }
+
+    .glow-card .gc-icon {
+      width: 36px; height: 36px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 10px; position: relative;
+    }
+    .glow-card h4 { font-size: 13px; font-weight: 600; margin-bottom: 2px; position: relative; }
+    .glow-card p  { font-size: 12px; color: var(--text-2); position: relative; }
+
+    /* ─── Screenshot ───────────────────────────────────────── */
+    .screenshot {
+      border-radius: var(--radius-lg); overflow: hidden;
+      border: 1px solid var(--border); margin: 28px 0;
+      background: var(--bg-panel);
+    }
+    .screenshot img { width: 100%; }
+    .screenshot figcaption {
+      padding: 12px 18px; font-size: 12px;
+      color: var(--text-3); border-top: 1px solid var(--border);
+    }
+
+    /* ─── How-to steps ─────────────────────────────────────── */
+    .steps { counter-reset: step; }
+    .step {
+      display: grid; gap: 28px; padding: 36px 0;
+      border-bottom: 1px solid var(--border); align-items: center;
+    }
+    @media (min-width: 640px) { .step { grid-template-columns: 1fr 1fr; } }
+    .step:last-child { border-bottom: none; }
+    .step:nth-child(even) .step__visual { order: -1; }
+    .step__text { counter-increment: step; }
+    .step__num {
+      display: flex; align-items: center; justify-content: center;
+      width: 28px; height: 28px; border-radius: 7px;
+      background: var(--accent); color: #1A1A1A;
+      font-size: 13px; font-weight: 700; margin-bottom: 12px;
+    }
+    .step__num::before { content: counter(step); }
+    .step h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .step p  { font-size: 13px; color: var(--text-2); line-height: 1.7; }
+    .step__visual {
+      border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .step__visual img { width: 100%; display: block; }
+
+    /* ─── Toolbar icon states ──────────────────────────────── */
+    .icon-states {
+      display: flex; gap: 24px;
+      justify-content: center; align-items: center;
+      flex-wrap: wrap;
+      margin: 24px 0;
+      padding: 32px 24px;
+      background: var(--bg-panel); border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+    }
+    .icon-state {
+      display: flex; flex-direction: column; align-items: center; gap: 10px;
+      min-width: 80px;
+    }
+    .icon-state img {
+      width: 48px; height: 48px;
+      image-rendering: -webkit-optimize-contrast;
+    }
+    .icon-state span {
+      font-size: 11px; font-weight: 600;
+      color: var(--text-2); text-transform: uppercase;
+      letter-spacing: .6px;
+    }
+    .icon-state-arrow {
+      color: var(--text-3); font-size: 18px;
+      align-self: center; margin-top: -10px;
+    }
+
+    /* ─── CSS Keyboard ─────────────────────────────────────── */
+    .keyboard-wrap {
+      margin: 0 0 24px;
+      padding: 28px 20px 20px;
+      background: var(--bg-panel);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      overflow-x: auto;
+    }
+    .kb {
+      display: flex; flex-direction: column;
+      gap: 4px; width: fit-content; margin: 0 auto;
+      font-family: var(--font);
+    }
+    .kb-row { display: flex; gap: 4px; }
+
+    .k {
+      display: flex; align-items: center; justify-content: center;
+      height: 36px; min-width: 36px; padding: 0 10px;
+      border-radius: 6px;
+      background: var(--bg-item);
+      border: 1px solid var(--border);
+      border-bottom-width: 3px;
+      font-size: 11px; font-weight: 500;
+      color: var(--text-3);
+      user-select: none;
+      transition: .15s;
+    }
+    /* Active/highlighted keys */
+    .k--on {
+      background: #E8EAED;
+      border-color: #ccc;
+      border-bottom-color: #aaa;
+      color: #202124;
+      font-weight: 700;
+      box-shadow: 0 0 8px rgba(232,234,237,.25);
+    }
+
+    /* Spacers for layout */
+    .k--w15 { min-width: 54px; }
+    .k--w175 { min-width: 63px; }
+    .k--w2  { min-width: 72px; }
+    .k--w25 { min-width: 90px; }
+    .k--space { flex: 1; min-width: 200px; }
+    .k--w125 { min-width: 45px; }
+
+    .kb-legend {
+      display: flex; gap: 16px; justify-content: center;
+      margin-top: 16px; font-size: 11px;
+    }
+    .kb-legend span {
+      display: flex; align-items: center; gap: 6px; color: var(--text-2);
+    }
+    .kb-legend .swatch {
+      width: 14px; height: 14px; border-radius: 4px;
+      border: 1px solid var(--border);
+    }
+    .swatch--on { background: #E8EAED; border-color: #ccc; }
+    .swatch--off { background: var(--bg-item); }
+
+    /* Shortcut reference list below keyboard */
+    .sc-list { display: grid; gap: 6px; }
+    @media (min-width: 480px) { .sc-list { grid-template-columns: 1fr 1fr; } }
+
+    .sc {
+      display: flex; align-items: center; gap: 12px;
+      padding: 10px 14px;
+      background: var(--bg-panel); border: 1px solid var(--border);
+      border-radius: var(--radius);
+    }
+    .sc__keys { display: flex; gap: 4px; flex-shrink: 0; min-width: 52px; }
+    kbd {
+      display: inline-flex; align-items: center; justify-content: center;
+      min-width: 26px; height: 26px; padding: 0 7px;
+      border-radius: 5px;
+      background: #E8EAED; border: 1px solid #ccc;
+      border-bottom-width: 2px; border-bottom-color: #aaa;
+      font-family: var(--font);
+      font-size: 11px; font-weight: 700;
+      color: #202124; line-height: 1;
+    }
+    .sc__action { font-size: 13px; font-weight: 600; color: var(--text); }
+    .sc__when   { font-size: 11px; color: var(--text-3); }
+
+    .shortcut-note {
+      margin-top: 14px; padding: 12px 16px;
+      border-radius: var(--radius);
+      background: var(--accent-dim);
+      border: 1px solid rgba(138,180,248,.2);
+      font-size: 12px; color: var(--text-2);
+      display: flex; align-items: flex-start; gap: 8px;
+    }
+    .shortcut-note svg { flex-shrink: 0; margin-top: 1px; }
+
+    /* ─── Settings ─────────────────────────────────────────── */
+    .settings-grid { display: grid; gap: 12px; }
+    @media (min-width: 640px) { .settings-grid { grid-template-columns: 1fr 1fr; } }
+
+    .setting-item {
+      background: var(--bg-panel); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 18px;
+    }
+    .setting-item__head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+    .setting-item h4 { font-size: 13px; font-weight: 600; }
+    .setting-item p  { font-size: 12px; color: var(--text-2); margin-bottom: 8px; }
+    .options { display: flex; gap: 5px; flex-wrap: wrap; }
+    .pill {
+      padding: 3px 10px; border-radius: 100px;
+      font-size: 11px; font-weight: 500;
+      background: var(--bg-item); border: 1px solid var(--border);
+      color: var(--text-3);
+    }
+    .pill--on {
+      background: var(--accent); border-color: var(--accent);
+      color: #1A1A1A;
+    }
+
+    /* ─── Footer ───────────────────────────────────────────── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 28px 0; text-align: center;
+      font-size: 12px; color: var(--text-3);
+    }
+    footer a { color: var(--text-2); }
+
+    .btt {
+      position: fixed; bottom: 20px; right: 20px;
+      width: 36px; height: 36px; border-radius: 50%;
+      background: var(--bg-panel); border: 1px solid var(--border);
+      color: var(--text); cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; pointer-events: none;
+      transition: opacity .25s, transform .25s;
+      transform: translateY(6px);
+      box-shadow: 0 2px 12px rgba(0,0,0,.35);
+    }
+    .btt.show { opacity: 1; pointer-events: auto; transform: translateY(0); }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- HERO                                                    -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <header class="hero">
+    <div class="hero__logo">
+      <img src="images/icon-128.png" alt="Downloads Plus icon">
+    </div>
+    <div class="hero__version">Version 1.1.0</div>
+    <h1>Downloads Plus</h1>
+    <p>A downloads popup and full page that feel like part of Chrome. Search, live speed, tags and keyboard control underneath.</p>
+    <nav class="nav">
+      <a href="#changelog">What's New</a>
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#shortcuts">Shortcuts</a>
+      <a href="#settings">Settings</a>
+    </nav>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- WHAT'S NEW                                              -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="changelog">
+    <div class="wrap">
+      <div class="section-label">Changelog</div>
+      <h2 class="section-title">What's New in 1.1.0</h2>
+      <p class="section-desc">The toolbar popup is here — and it brought friends.</p>
+      <ul class="changelog">
+        <li>
+          <div class="cl-icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+          <div><strong>Toolbar popup</strong> — Click the extension icon for a searchable popup with live speed and progress, without leaving the page.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-orange"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <div><strong>Time remaining</strong> — Every active download now shows how long is left, next to the speed, in both surfaces.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-green"><svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="4" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><path d="M3 10h18"/></svg></div>
+          <div><strong>Date headings</strong> — Downloads are grouped under Today, Yesterday, Last 7 days, and then the date.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/></svg></div>
+          <div><strong>Progress ring</strong> — The toolbar icon fills as downloads run, counts multiples, goes green on completion or red on failure.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-orange"><svg class="icon" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.01"/><path d="M10 8h.01"/><path d="M14 8h.01"/><path d="M18 8h.01"/><path d="M8 16h8"/></svg></div>
+          <div><strong>Keyboard shortcuts</strong> — Show in folder, copy link, pause, resume, retry, cancel and remove. All rebindable.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg></div>
+          <div><strong>Chrome UI hidden</strong> — Chrome's download button and bubble are hidden so they don't cover the popup. Reversible in Settings.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-green"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
+          <div><strong>Themes</strong> — A light theme that no longer flashes, with a smooth animated selector.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-red"><svg class="icon" viewBox="0 0 24 24"><path d="M10 2h4"/><path d="M12 14l-3-3"/><circle cx="12" cy="14" r="8"/></svg></div>
+          <div><strong>Auto-clear</strong> — Clear completed downloads after 1h, 24h or 7d. Failed ones are always kept.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-green"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+          <div><strong>Search fix</strong> — No longer breaks on filenames with brackets or parentheses.</div>
+        </li>
+        <li>
+          <div class="cl-icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><circle cx="16" cy="4" r="1"/><path d="m18 19 1-7-6 1"/><path d="m5 8 3-3 5.5 3-2.36 3.5"/><path d="m4.24 14.5 3.44.75 1.5 2.66"/><path d="m10.5 16 1.5-3"/></svg></div>
+          <div><strong>Accessibility</strong> — Sorting, dropdowns and settings rebuilt for keyboard and screen reader use.</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- FEATURES                                                -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="features">
+    <div class="wrap">
+      <div class="section-label">Features</div>
+      <h2 class="section-title">Everything Downloads Plus Does</h2>
+      <p class="section-desc">Two surfaces, one download manager. Both search, both show live progress, and both stay out of your way.</p>
+
+      <div class="features">
+        <div class="fcard">
+          <div class="fcard__icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><rect width="18" height="18" x="3" y="3" rx="2"/><path d="M3 9h18"/><path d="M9 21V9"/></svg></div>
+          <h3>Toolbar Popup</h3>
+          <p>Click the icon to see your recent downloads without leaving the page. Search, live speed, time remaining, pause, resume and retry — all inline.</p>
+        </div>
+        <div class="fcard">
+          <div class="fcard__icon ic-green"><svg class="icon" viewBox="0 0 24 24"><rect width="20" height="14" x="2" y="3" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg></div>
+          <h3>Full-Page Dashboard</h3>
+          <p>Ctrl+J opens a complete downloads page. Search across filenames, URLs and tags. Sort by date, name, size, type or status. Expand any row for details.</p>
+        </div>
+        <div class="fcard">
+          <div class="fcard__icon ic-orange"><svg class="icon" viewBox="0 0 24 24"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg></div>
+          <h3>Live Speed & ETA</h3>
+          <p>Every active download shows real-time transfer speed and time remaining. The ETA settles smoothly — no jumpy numbers between ticks.</p>
+        </div>
+        <div class="fcard">
+          <div class="fcard__icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><path d="M12.586 2.586A2 2 0 0 0 11.172 2H4a2 2 0 0 0-2 2v7.172a2 2 0 0 0 .586 1.414l8.704 8.704a2.426 2.426 0 0 0 3.42 0l6.58-6.58a2.426 2.426 0 0 0 0-3.42z"/><circle cx="7.5" cy="7.5" r=".5" fill="currentColor"/></svg></div>
+          <h3>Smart Tags</h3>
+          <p>Tags are extracted from filenames automatically. Resolution, codecs, audio formats and file type — all detected and searchable.</p>
+          <div class="tags-demo">
+            <span class="tag">1080p</span><span class="tag">x265</span><span class="tag">HDR10</span><span class="tag">ATMOS</span><span class="tag">mkv</span><span class="tag">BLURAY</span><span class="tag">pdf</span><span class="tag">zip</span>
+          </div>
+        </div>
+        <div class="fcard">
+          <div class="fcard__icon ic-green"><svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg></div>
+          <h3>Instant Search</h3>
+          <p>Search by filename, URL or tag. Matches are highlighted character by character as you type. Works with brackets and parentheses.</p>
+        </div>
+        <div class="fcard">
+          <div class="fcard__icon ic-orange"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+          <h3>Toolbar Badge</h3>
+          <p>A progress ring fills around the icon as downloads run. Multiple downloads show a count. Green checkmark on completion, red on failure.</p>
+        </div>
+
+        <!-- Glows (wide) -->
+        <div class="fcard fcard--wide">
+          <div class="fcard__icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg></div>
+          <h3>Ambient Status Glows</h3>
+          <p style="margin-bottom:16px;">Each download card glows to show its state at a glance.</p>
+          <div class="glow-strip">
+            <div class="glow-card glow-card--blue">
+              <div class="gc-icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg></div>
+              <h4>Downloading</h4><p>Blue glow with live progress fill</p>
+            </div>
+            <div class="glow-card glow-card--green">
+              <div class="gc-icon ic-green"><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></div>
+              <h4>Complete</h4><p>Green pulse on the most recent file</p>
+            </div>
+            <div class="glow-card glow-card--red">
+              <div class="gc-icon ic-red"><svg class="icon" viewBox="0 0 24 24"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div>
+              <h4>Failed</h4><p>Red glow with retry button</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fcard">
+          <div class="fcard__icon ic-blue"><svg class="icon" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.01"/><path d="M10 8h.01"/><path d="M14 8h.01"/><path d="M18 8h.01"/><path d="M8 16h8"/></svg></div>
+          <h3>Full Keyboard Control</h3>
+          <p>Navigate with arrow keys. Open in folder, copy link, pause, resume, retry, cancel and remove — all with single-key shortcuts, all rebindable.</p>
+        </div>
+        <div class="fcard">
+          <div class="fcard__icon ic-green"><svg class="icon" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg></div>
+          <h3>Sort & Group</h3>
+          <p>Sort by date, name, size, file type or status. Date sorting groups under Today, Yesterday, Last 7 days, then the specific date.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- HOW IT WORKS                                            -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="how-it-works">
+    <div class="wrap">
+      <div class="section-label">Guide</div>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-desc">A step-by-step walkthrough of every surface and interaction.</p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step__text">
+            <div class="step__num"></div>
+            <h3>The Popup</h3>
+            <p>Click the Downloads Plus icon in your toolbar. A compact popup appears showing your most recent downloads. Active downloads are pinned to the top with live speed (MB/s) and estimated time remaining. Use the search bar to filter by name, URL or tag. Each row has inline action buttons: pause/resume, cancel, show in folder, copy link, and remove.</p>
+          </div>
+          <figure class="step__visual"><img src="images/1-popup.png" alt="The Downloads Plus popup" loading="lazy"></figure>
+        </div>
+        <div class="step">
+          <div class="step__text">
+            <div class="step__num"></div>
+            <h3>The Full Page</h3>
+            <p>Press <kbd>Ctrl</kbd>+<kbd>J</kbd> or click "Show all downloads" in the popup footer. The full-page dashboard replaces Chrome's default downloads page. Search all files, sort by any column, expand any card for its source URL, file path and size. Downloads are grouped — Today, Yesterday, Last 7 days — then by specific date.</p>
+          </div>
+          <figure class="step__visual"><img src="images/2-full-page.png" alt="Full-page dashboard" loading="lazy"></figure>
+        </div>
+        <div class="step">
+          <div class="step__text">
+            <div class="step__num"></div>
+            <h3>Active Downloads</h3>
+            <p>When a download starts, its card lights up with a blue ambient glow. A progress bar fills across the card, and you see live transfer speed and how long is left. The toolbar icon shows a progress ring that fills as your download runs. Multiple downloads show a count badge.</p>
+          </div>
+          <figure class="step__visual"><img src="images/3-active-download.png" alt="A download in progress" loading="lazy"></figure>
+        </div>
+        <div class="step">
+          <div class="step__text">
+            <div class="step__num"></div>
+            <h3>Search & Tags</h3>
+            <p>Type a filename, URL fragment, or tag like "pdf" or "1080p". Matches are highlighted as you type. Smart tags are extracted automatically: resolution (720p, 1080p, 4K), codecs (x265, HEVC, AV1), audio (DTS, Atmos, FLAC), and file extensions.</p>
+          </div>
+          <figure class="step__visual"><img src="images/4-search.png" alt="Search with highlighted matches" loading="lazy"></figure>
+        </div>
+        <div class="step">
+          <div class="step__text">
+            <div class="step__num"></div>
+            <h3>Settings</h3>
+            <p>Click the gear icon. Choose your theme (dark, light, or system), set a default sort column, enable single-card expansion, hide or show Chrome's download button, set an auto-clear timer, and rebind every keyboard shortcut. Changes sync instantly across popup and full page.</p>
+          </div>
+          <figure class="step__visual"><img src="images/5-settings.png" alt="Settings panel" loading="lazy"></figure>
+        </div>
+      </div>
+
+      <!-- Toolbar icon states — real extension assets -->
+      <div style="margin-top:40px;">
+        <h3 style="font-size:18px;font-weight:700;margin-bottom:6px;">Toolbar Icon States</h3>
+        <p class="section-desc">The toolbar icon tells you what's happening without opening anything.</p>
+        <div class="icon-states">
+          <div class="icon-state">
+            <img src="images/icon-128.png" alt="Idle state">
+            <span>Idle</span>
+          </div>
+          <div class="icon-state-arrow">→</div>
+          <div class="icon-state">
+            <img src="images/icon-progress.svg" alt="Downloading at 35%">
+            <span>35%</span>
+          </div>
+          <div class="icon-state-arrow">→</div>
+          <div class="icon-state">
+            <img src="images/icon-progress-80.svg" alt="Downloading at 80%">
+            <span>80%</span>
+          </div>
+          <div class="icon-state-arrow">→</div>
+          <div class="icon-state">
+            <img src="images/icon-paused.svg" alt="Download paused">
+            <span>Paused</span>
+          </div>
+          <div class="icon-state-arrow">→</div>
+          <div class="icon-state">
+            <img src="images/icon-done.svg" alt="Download complete">
+            <span>Done</span>
+          </div>
+          <div class="icon-state-arrow" style="opacity:.5;">|</div>
+          <div class="icon-state">
+            <img src="images/icon-multi.svg" alt="3 downloads active">
+            <span>3 active</span>
+          </div>
+          <div class="icon-state-arrow" style="opacity:.5;">|</div>
+          <div class="icon-state">
+            <img src="images/icon-failed.svg" alt="Download failed">
+            <span>Failed</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- KEYBOARD SHORTCUTS                                      -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="shortcuts">
+    <div class="wrap">
+      <div class="section-label">Keyboard</div>
+      <h2 class="section-title">Keyboard Shortcuts</h2>
+      <p class="section-desc">Navigate the list with arrow keys, then act on the selected download. Highlighted keys are the ones Downloads Plus uses.</p>
+
+      <!-- CSS keyboard -->
+      <div class="keyboard-wrap">
+        <div class="kb">
+          <!-- Row 1: Number row -->
+          <div class="kb-row">
+            <div class="k">Esc</div>
+            <div class="k">1</div><div class="k">2</div><div class="k">3</div><div class="k">4</div><div class="k">5</div><div class="k">6</div><div class="k">7</div><div class="k">8</div><div class="k">9</div><div class="k">0</div>
+            <div class="k">-</div>
+            <div class="k">=</div>
+            <div class="k k--w2">Bksp</div>
+          </div>
+          <!-- Row 2: QWERTY -->
+          <div class="kb-row">
+            <div class="k k--w15">Tab</div>
+            <div class="k">Q</div><div class="k">W</div><div class="k">E</div>
+            <div class="k k--on">R</div>
+            <div class="k">T</div><div class="k">Y</div><div class="k">U</div><div class="k">I</div><div class="k">O</div>
+            <div class="k k--on">P</div>
+            <div class="k">[</div><div class="k">]</div>
+            <div class="k k--w15">\</div>
+          </div>
+          <!-- Row 3: ASDF -->
+          <div class="kb-row">
+            <div class="k k--w175">Caps</div>
+            <div class="k">A</div><div class="k">S</div><div class="k">D</div><div class="k">F</div><div class="k">G</div><div class="k">H</div><div class="k">J</div><div class="k">K</div><div class="k">L</div><div class="k">;</div><div class="k">'</div>
+            <div class="k k--w25 k--on">Enter</div>
+          </div>
+          <!-- Row 4: ZXCV -->
+          <div class="kb-row">
+            <div class="k k--w25">Shift</div>
+            <div class="k">Z</div>
+            <div class="k k--on">X</div>
+            <div class="k k--on">C</div>
+            <div class="k">V</div><div class="k">B</div><div class="k">N</div><div class="k">M</div><div class="k">,</div><div class="k">.</div>
+            <div class="k k--on">/</div>
+            <div class="k k--w25">Shift</div>
+          </div>
+          <!-- Row 5: Bottom -->
+          <div class="kb-row">
+            <div class="k k--w15">Ctrl</div>
+            <div class="k">Win</div>
+            <div class="k k--w15">Alt</div>
+            <div class="k k--space">Space</div>
+            <div class="k k--w15">Alt</div>
+            <div class="k">Fn</div>
+            <div class="k k--w15">Ctrl</div>
+            <!-- Arrow cluster -->
+            <div class="k" style="opacity:.3;">←</div>
+            <div class="k k--on">↑↓</div>
+            <div class="k" style="opacity:.3;">→</div>
+          </div>
+        </div>
+
+        <div class="kb-legend">
+          <span><span class="swatch swatch--on"></span> Used by Downloads Plus</span>
+          <span><span class="swatch swatch--off"></span> Standard key</span>
+        </div>
+      </div>
+
+      <!-- Reference list -->
+      <div class="sc-list">
+        <div class="sc">
+          <div class="sc__keys"><kbd>↑</kbd><kbd>↓</kbd></div>
+          <div class="sc__info"><div class="sc__action">Navigate list</div><div class="sc__when">Always</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc__keys"><kbd>Enter</kbd></div>
+          <div class="sc__info"><div class="sc__action">Show in folder</div><div class="sc__when">Finished download</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc__keys"><kbd>C</kbd></div>
+          <div class="sc__info"><div class="sc__action">Copy download link</div><div class="sc__when">Any download</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc__keys"><kbd>P</kbd></div>
+          <div class="sc__info"><div class="sc__action">Pause / Resume</div><div class="sc__when">In progress</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc__keys"><kbd>R</kbd></div>
+          <div class="sc__info"><div class="sc__action">Retry</div><div class="sc__when">Failed download</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc__keys"><kbd>X</kbd></div>
+          <div class="sc__info"><div class="sc__action">Cancel</div><div class="sc__when">In progress</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc__keys"><kbd>/</kbd></div>
+          <div class="sc__info"><div class="sc__action">Focus search</div><div class="sc__when">No selection needed</div></div>
+        </div>
+        <div class="sc">
+          <div class="sc__keys"><kbd>Del</kbd></div>
+          <div class="sc__info"><div class="sc__action">Remove from list</div><div class="sc__when">Any download</div></div>
+        </div>
+      </div>
+
+      <div class="shortcut-note">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+        <span>Shortcuts only fire while a card is selected (after pressing an arrow key) and never while typing in a text field. Every binding is rebindable in Settings.</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- SETTINGS                                                -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section id="settings">
+    <div class="wrap">
+      <div class="section-label">Configuration</div>
+      <h2 class="section-title">Settings Reference</h2>
+      <p class="section-desc">Every option in the settings panel, explained.</p>
+      <div class="settings-grid">
+        <div class="setting-item">
+          <div class="setting-item__head">
+            <svg class="icon icon-sm" style="color:var(--accent);" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
+            <h4>Theme</h4>
+          </div>
+          <p>Choose how Downloads Plus looks. Transitions smoothly.</p>
+          <div class="options"><span class="pill">System</span><span class="pill pill--on">Dark</span><span class="pill">Light</span></div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-item__head">
+            <svg class="icon icon-sm" style="color:var(--green);" viewBox="0 0 24 24"><path d="m21 16-4 4-4-4"/><path d="M17 20V4"/><path d="m3 8 4-4 4 4"/><path d="M7 4v16"/></svg>
+            <h4>Default Sort</h4>
+          </div>
+          <p>The column the list sorts by when you first open it.</p>
+          <div class="options"><span class="pill pill--on">Date</span><span class="pill">Name</span><span class="pill">Size</span><span class="pill">Type</span><span class="pill">Status</span></div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-item__head">
+            <svg class="icon icon-sm" style="color:var(--red);" viewBox="0 0 24 24"><path d="M10 2h4"/><path d="M12 14l-3-3"/><circle cx="12" cy="14" r="8"/></svg>
+            <h4>Auto-Clear</h4>
+          </div>
+          <p>Remove completed downloads automatically. Failed downloads are never cleared.</p>
+          <div class="options"><span class="pill pill--on">Never</span><span class="pill">1 hour</span><span class="pill">24 hours</span><span class="pill">7 days</span></div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-item__head">
+            <svg class="icon icon-sm" style="color:var(--orange);" viewBox="0 0 24 24"><path d="M21 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v3"/><path d="M21 16v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-3"/><path d="M4 12H2"/><path d="M10 12H8"/><path d="M16 12h-2"/><path d="M22 12h-2"/></svg>
+            <h4>Single Expand</h4>
+          </div>
+          <p>Expanding a card collapses the previous one. Turn off to keep multiple cards open.</p>
+          <div class="options"><span class="pill pill--on">On</span><span class="pill">Off</span></div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-item__head">
+            <svg class="icon icon-sm" style="color:var(--accent);" viewBox="0 0 24 24"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+            <h4>Hide Chrome Download UI</h4>
+          </div>
+          <p>Suppress Chrome's download button and bubble. Re-enable anytime.</p>
+          <div class="options"><span class="pill pill--on">Hidden</span><span class="pill">Visible</span></div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-item__head">
+            <svg class="icon icon-sm" style="color:var(--green);" viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="M6 8h.01"/><path d="M10 8h.01"/><path d="M14 8h.01"/><path d="M18 8h.01"/><path d="M8 16h8"/></svg>
+            <h4>Keyboard Shortcuts</h4>
+          </div>
+          <p>Rebind every action to your preferred key or combo. Click to record a new one.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <!-- PRIVACY                                                 -->
+  <!-- ═══════════════════════════════════════════════════════ -->
+  <section style="padding-bottom:36px;">
+    <div class="wrap" style="text-align:center;">
+      <div class="section-label" style="justify-content:center;">
+        <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+        Privacy
+      </div>
+      <h2 class="section-title">Everything Stays on Your Device</h2>
+      <p class="section-desc" style="margin:0 auto;">No servers, no analytics, no accounts, no tracking. Your downloads, settings and files never leave your machine. Five permissions — each with a single, narrow purpose disclosed in the <a href="privacy-policy.html">privacy policy</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      Downloads Plus · <a href="https://chromewebstore.google.com/detail/downloads-plus/jplfagaopifaghklladncgclkenjengk" target="_blank" rel="noopener">Chrome Web Store</a> · <a href="privacy-policy.html">Privacy Policy</a>
+    </div>
+  </footer>
+
+  <button class="btt" id="btt" aria-label="Back to top" onclick="window.scrollTo({top:0,behavior:'smooth'})">
+    <svg class="icon icon-sm" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"/></svg>
+  </button>
+
+  <script>
+    const b=document.getElementById('btt');
+    let t=false;
+    window.addEventListener('scroll',()=>{if(!t){requestAnimationFrame(()=>{b.classList.toggle('show',scrollY>300);t=false});t=true}},{passive:true});
+  </script>
+</body>
 </html>
